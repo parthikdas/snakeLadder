@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // decorate the grid when page is loaded
     for(let i = 1; i <= 100; i++) {
         document.getElementById(i).style = `background-color: ${i&1 ? '#2d3a4a' : '#c6a178'}; color: ${i&1 ? '#c6a178' : '#2d3a4a'};`
+        document.getElementById(i).innerHTML += ladderPos[i]?'ladder':snakePos[i]?'snake':'' 
     }
 })
 
@@ -64,50 +65,44 @@ document.getElementById('noOfPlayersBut').addEventListener('click', () => {
 
 // Function for roll
 document.getElementById('roll').addEventListener('click', () => {
-    let n = Math.ceil(Math.random() * 6)
-    document.getElementById('dice').innerHTML = n
-    if(n === 1) {
-        if(playerPos[turn] === 0) playerPos[turn] = 1; // now game will start as the player is unlocked
-        else {
-            // move the player
-            movePlayer(1)
-            // increment
-            if(playerPos[turn] + 1 <= 100) playerPos[turn] ++ // if move exceeds 100 don't do
-            // ladder
-            checkLadder()
-            // snake
-            checkSnake()
-            // game over condition
-            if(playerPos[turn] === 100){
-                let winner = turn > 0 ? turn : noOfPlayers-1 // for some reason turn++ is happening so reverting it back
-                setTimeout(() => {
-                    alert('Game over. Winner is Player ' + winner)
-                    location.reload()
-                }, 1000)
+    setInterval(()=>{
+        let n = Math.ceil(Math.random() * 6)
+        document.getElementById('dice').innerHTML = n
+        if(n === 1) {
+            if(playerPos[turn] === 0) playerPos[turn] = 1; // now game will start as the player is unlocked
+            else {
+                // move the player
+                movePlayer(1)
+                // increment
+                if(playerPos[turn] + 1 <= 100) playerPos[turn] ++ // if move exceeds 100 don't do
+                // ladder
+                checkLadder()
+                // snake
+                checkSnake()
+                // game over condition
+                gameOver()
             }
-        }
-    } else {
-        if(playerPos[turn] > 0 && playerPos[turn] + n <= 100) { // if player is unlocked and move not exceeds 100
-            // move the player
-            movePlayer(n)
-            // increment
-            if(playerPos[turn] + turn <= 100) playerPos[turn] += n
-            // ladder
-            checkLadder()
-            // snake
-            checkSnake()
-            // game over condition
-            if(playerPos[turn] === 100){
-                let winner = turn > 0 ? turn : noOfPlayers-1 // for some reason turn++ is happening so reverting it back 
-                setTimeout(() => {
-                    alert('Game over. Winner is Player ' + winner)
-                    location.reload()
-                }, 1000)
+        } else {
+            if(playerPos[turn] > 0 && playerPos[turn] + n <= 100) { // if player is unlocked and move not exceeds 100
+                // move the player
+                movePlayer(n)
+                // increment
+                if(playerPos[turn] + turn <= 100) playerPos[turn] += n
+                // ladder
+                // setTimeout(
+                // checkLadder(turn > 0 ? turn-1 : noOfPlayers-1),500) // as next turn was coming so sending prev turn
+                checkLadder()
+                // snake
+                // setTimeout(
+                // checkSnake(turn > 0 ? turn-1 : noOfPlayers-1),500)
+                checkSnake()
+                // game over condition
+                gameOver()
             }
-        }
-        turn = (++turn) % noOfPlayers // increment players
-        document.getElementById('turn').innerHTML = 'Player ' + (turn+1) + ' turn'
-    }
+            turn = (++turn) % noOfPlayers // increment players
+            document.getElementById('turn').innerHTML = 'Player ' + (turn+1) + ' turn'
+        }   
+    },1000)
 })
 
 // Confirm from user if they really want to reset game
@@ -143,5 +138,15 @@ function checkSnake() {
     if(newPos != undefined) {
         movePlayer(newPos-playerPos[turn]) // sending the diff b/w old and new pos, here it will be -ve so it will go down
         playerPos[turn] = newPos
+    }
+}
+
+// Function to check the game is over
+function gameOver() {
+    if(playerPos[turn] === 100){
+        alert('Game over. Winner is Player ' + (turn+1))
+        setTimeout(() => {
+            location.reload()
+        }, 1000)
     }
 }
