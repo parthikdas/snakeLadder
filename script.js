@@ -23,7 +23,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // decorate the grid when page is loaded
     for(let i = 1; i <= 100; i++) {
         document.getElementById(i).style = `background-color: ${i&1 ? '#2d3a4a' : '#c6a178'}; color: ${i&1 ? '#c6a178' : '#2d3a4a'};`
-        document.getElementById(i).innerHTML += ladderPos[i]?'ladder':snakePos[i]?'snake':'' 
+    }
+    // putting the stairs
+    let ladderArr = Object.keys(ladderPos), gap = document.getElementById(1).offsetHeight/2
+    for(let i = 0; i < ladderArr.length; i++) {
+        let l1 = document.getElementById('l' + i + '1'), l2 = document.getElementById('l' + i + '2')
+        l1.setAttribute('x1',document.getElementById(ladderPos[ladderArr[i]]).getBoundingClientRect().left + gap)
+        l1.setAttribute('y1',document.getElementById(ladderPos[ladderArr[i]]).getBoundingClientRect().top + gap)
+        l1.setAttribute('x2',document.getElementById(ladderArr[i]).getBoundingClientRect().left + gap)
+        l1.setAttribute('y2',document.getElementById(ladderArr[i]).getBoundingClientRect().top + gap)
+        l2.setAttribute('x1',document.getElementById(ladderPos[ladderArr[i]]).getBoundingClientRect().left + gap*2)
+        l2.setAttribute('y1',document.getElementById(ladderPos[ladderArr[i]]).getBoundingClientRect().top + gap)
+        l2.setAttribute('x2',document.getElementById(ladderArr[i]).getBoundingClientRect().left + gap*2)
+        l2.setAttribute('y2',document.getElementById(ladderArr[i]).getBoundingClientRect().top + gap)
+    }
+    // putting the snakes
+    let snakeArr = Object.keys(snakePos)
+    for(let i = 0; i < snakeArr.length; i++) {
+        let s1 = document.getElementById('s' + i)
+        s1.setAttribute('x1',document.getElementById(snakePos[snakeArr[i]]).getBoundingClientRect().left + gap)
+        s1.setAttribute('y1',document.getElementById(snakePos[snakeArr[i]]).getBoundingClientRect().top + gap)
+        s1.setAttribute('x2',document.getElementById(snakeArr[i]).getBoundingClientRect().left + gap)
+        s1.setAttribute('y2',document.getElementById(snakeArr[i]).getBoundingClientRect().top + gap)
     }
 })
 
@@ -65,7 +86,7 @@ document.getElementById('noOfPlayersBut').addEventListener('click', () => {
 
 // Function for roll
 document.getElementById('roll').addEventListener('click', () => {
-    setInterval(()=>{
+    // setInterval(()=>{ // remove later, its just to automate stuff
         let n = Math.ceil(Math.random() * 6)
         document.getElementById('dice').innerHTML = n
         if(n === 1) {
@@ -102,7 +123,7 @@ document.getElementById('roll').addEventListener('click', () => {
             turn = (++turn) % noOfPlayers // increment players
             document.getElementById('turn').innerHTML = 'Player ' + (turn+1) + ' turn'
         }   
-    },1000)
+    //},1000)
 })
 
 // Confirm from user if they really want to reset game

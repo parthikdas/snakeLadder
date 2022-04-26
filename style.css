@@ -22,6 +22,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1;
 }
 #players {
     height: fit-content;
@@ -127,4 +128,11 @@ h1 {
 #player4 {
     left: 2.5%;
     bottom: 2.5%;
+}
+svg {
+    position: absolute;
+    height: 100vh;
+    width: 80%;
+    top:0;
+    left: 0;
 }
